@@ -2,15 +2,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "API_KEY_KAMU",
-  authDomain: "musik-web-app.firebaseapp.com",
-  databaseURL: "https://musik-web-app-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "musik-web-app"
+ apiKey: "API_KEY_KAMU",
+ authDomain: "musik-web-app.firebaseapp.com",
+ databaseURL: "https://musik-web-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+ projectId: "musik-web-app"
 };
 
-// KREDENSIAL HANYA DI SATU TEMPAT: sini!
 const ADMIN_USER = "admin";
-const ADMIN_PASS = "musik";  // ganti sesuai keinginan
+const ADMIN_PASS = "password";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -20,80 +19,85 @@ const searchInput = document.getElementById("search");
 
 let songs = [];
 
-function render(list) {
-  playlist.innerHTML = "";
-  list.forEach(song => {
-    const div = document.createElement("div");
-    div.className = "song";
+function render(list){
 
-    const title = document.createElement("p");
-    title.innerText = song.title;
+playlist.innerHTML="";
 
-    const audio = document.createElement("audio");
-    audio.src = song.url;
-    audio.controls = true;
+list.forEach(song=>{
 
-    div.appendChild(title);
-    div.appendChild(audio);
-    playlist.appendChild(div);
-  });
-}
+const div=document.createElement("div");
+div.className="song";
 
-// Firebase listener
-onValue(ref(db, "musik"), snapshot => {
-  songs = [];
-  const data = snapshot.val();
-  if (!data) return;
+const title=document.createElement("p");
+title.innerText=song.title;
 
-  for (const key in data) {
-    songs.push(data[key]);
-  }
-  render(songs);
+const audio=document.createElement("audio");
+audio.src=song.url;
+audio.controls=true;
+
+div.appendChild(title);
+div.appendChild(audio);
+
+playlist.appendChild(div);
+
 });
 
-// Search
-searchInput.addEventListener("input", () => {
-  const keyword = searchInput.value.toLowerCase();
-  const filtered = songs.filter(song => 
-    song.title.toLowerCase().includes(keyword)
-  );
-  render(filtered);
+}
+
+onValue(ref(db,"musik"),snapshot=>{
+
+songs=[];
+
+const data = snapshot.val();
+
+if(!data) return;
+
+for(const key in data){
+songs.push(data[key]);
+}
+
+render(songs);
+
 });
 
-// ===== FUNGSI LOGIN (dipanggil dari HTML) =====
-window.loginAdmin = function(user, pass) {
-  if (user === ADMIN_USER && pass === ADMIN_PASS) {
-    localStorage.setItem("admin", "true");
-    // Beritahu HTML bahwa login berhasil
-    if (typeof window.updateAdminUI === 'function') {
-      window.updateAdminUI(true);
-    }
-    // Tutup modal (panggil fungsi dari HTML)
-    const closeBtn = document.getElementById('closeModalBtn');
-    if (closeBtn) closeBtn.click();
-  } else {
-    alert("Username atau password salah!");
-  }
+searchInput.addEventListener("input",()=>{
+
+const keyword=searchInput.value.toLowerCase();
+
+const filtered=songs.filter(song=>
+song.title.toLowerCase().includes(keyword)
+);
+
+render(filtered);
+
+});
+
+window.uploadSong=function(){
+
+const title=document.getElementById("title").value;
+const url=document.getElementById("url").value;
+
+push(ref(db,"musik"),{
+title:title,
+url:url
+});
+
 };
 
-// ===== FUNGSI UPLOAD (dipanggil dari HTML) =====
-window.uploadSong = function(title, url) {
-  push(ref(db, "musik"), {
-    title: title,
-    url: url
-  }).then(() => {
-    console.log("Upload sukses:", title);
-  }).catch(err => {
-    alert("Gagal upload: " + err.message);
-  });
-};
+window.login=function(){
 
-// Cek status login saat load
-if (localStorage.getItem("admin") === "true") {
-  // Kasih tahu HTML kalau admin sudah login
-  setTimeout(() => {
-    if (typeof window.updateAdminUI === 'function') {
-      window.updateAdminUI(true);
-    }
-  }, 100);  // sedikit delay biar HTML siap
+const user=document.getElementById("user").value;
+const pass=document.getElementById("pass").value;
+
+if(user===ADMIN_USER && pass===ADMIN_PASS){
+
+document.getElementById("adminPanel").style.display="block";
+document.getElementById("loginPanel").style.display="none";
+
+}else{
+
+alert("login salah");
+
 }
+
+};
