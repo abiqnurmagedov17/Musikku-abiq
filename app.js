@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: AIzaSyDAvFkn_GT6YROhlOBfu5JYvYljBK_ss1o",
+  apiKey: "AIzaSyDAvFkn_GT6YROhlOBfu5JYvYljBK_ss1o",
   authDomain: "musik-web-app.firebaseapp.com",
   databaseURL: "https://musik-web-app-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "musik-web-app"
