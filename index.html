@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Web Musik</title>
+
+<style>
+
+body{
+background:#111;
+color:white;
+font-family:Arial;
+text-align:center;
+}
+
+input,button{
+padding:8px;
+margin:5px;
+}
+
+.song{
+border:1px solid #333;
+margin:10px;
+padding:10px;
+}
+
+audio{
+width:300px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>🎵 Web Musik</h2>
+
+<input id="search" placeholder="search lagu">
+
+<div id="playlist"></div>
+
+<hr>
+
+<div id="loginPanel">
+
+<h3>Admin Login</h3>
+
+<input id="user" placeholder="username">
+<input id="pass" type="password" placeholder="password">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+<div id="adminPanel" style="display:none">
+
+<h3>Upload Lagu</h3>
+
+<input id="title" placeholder="judul lagu">
+<input id="url" placeholder="url mp3">
+
+<button onclick="uploadSong()">Upload</button>
+
+</div>
+
+<script type="module" src="/app.js"></script>
+
+</body>
+</html>
