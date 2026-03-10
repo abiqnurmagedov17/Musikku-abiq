@@ -2,14 +2,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
- apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+ apiKey: "AIzaSyDAvFkn_GT6YROhlOBfu5JYvYljBK_ss1o",
  authDomain: "musik-web-app.firebaseapp.com",
  databaseURL: "https://musik-web-app-default-rtdb.asia-southeast1.firebasedatabase.app",
  projectId: "musik-web-app"
 };
 
-const ADMIN_USER = import.meta.env.VITE_ADMIN_USER;
-const ADMIN_PASS = import.meta.env.VITE_ADMIN_PASS;
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "admin123";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -48,7 +48,9 @@ onValue(ref(db,"musik"),snapshot=>{
 
 songs=[];
 
-const data=snapshot.val();
+const data = snapshot.val();
+
+if(!data) return;
 
 for(const key in data){
 songs.push(data[key]);
