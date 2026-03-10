@@ -1,141 +1,439 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Web Musik</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Musik · neobrutal</title>
+  <style>
+    /* --- NEOBRUTALISM RESET & BASE --- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-<style>
+    body {
+      background: #f0f0f0;
+      font-family: 'Helvetica', 'Arial Black', 'Arial', sans-serif;
+      margin: 0;
+      padding: 24px;
+      display: flex;
+      gap: 24px;
+      min-height: 100vh;
+      color: #111;
+    }
 
-body{
-background:#0f0f0f;
-color:white;
-font-family:Arial;
-margin:0;
-padding:20px;
-display:flex;
-gap:20px;
-}
+    .main {
+      flex: 1;
+      background: #ffffff;
+      border: 4px solid #000;
+      box-shadow: 8px 8px 0 rgba(0,0,0,0.8);
+      padding: 30px 25px;
+      position: relative;
+    }
 
-.main{
-flex:1;
-}
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      text-transform: uppercase;
+      margin: 0 0 20px 0;
+      color: #000;
+      border-bottom: 5px solid #000;
+      display: inline-block;
+      padding-bottom: 8px;
+      background: #f9ff73;
+      padding-left: 12px;
+      padding-right: 12px;
+      transform: rotate(-0.5deg);
+    }
 
-h1{
-margin-bottom:20px;
-color:#1db954;
-}
+    #search {
+      width: 100%;
+      padding: 18px 20px;
+      border: 4px solid #000;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: #fff;
+      margin-bottom: 30px;
+      box-shadow: 6px 6px 0 #000;
+      transition: 0.1s linear;
+      font-family: inherit;
+    }
 
-#search{
-width:100%;
-padding:12px;
-border-radius:8px;
-border:none;
-margin-bottom:20px;
-font-size:16px;
-}
+    #search:focus {
+      outline: none;
+      background: #cbffcb;
+      transform: translate(2px,2px);
+      box-shadow: 2px 2px 0 #000;
+    }
 
-#playlist{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-gap:15px;
-}
+    #playlist {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+    }
 
-.song{
-background:#181818;
-padding:15px;
-border-radius:10px;
-}
+    .song {
+      background: #3d7ea6;
+      border: 4px solid #000;
+      box-shadow: 8px 8px 0 #000;
+      padding: 20px 15px 15px 15px;
+      transition: 0.1s ease;
+      color: #fff;
+    }
 
-.song p{
-margin-bottom:10px;
-font-weight:bold;
-}
+    .song:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 14px 14px 0 #000;
+    }
 
-audio{
-width:100%;
-}
+    .song p {
+      font-size: 1.4rem;
+      font-weight: 900;
+      margin: 0 0 15px 0;
+      line-height: 1.2;
+      text-transform: uppercase;
+      word-break: break-word;
+      background: #000;
+      display: inline-block;
+      padding: 4px 12px;
+      color: #fff;
+      border: 2px solid #fff;
+      box-shadow: 4px 4px 0 #fff;
+    }
 
-/* sidebar */
+    audio {
+      width: 100%;
+      height: 40px;
+      margin-top: 10px;
+      filter: drop-shadow(4px 4px 0 #000);
+      border: 2px solid #000;
+    }
 
-.sidebar{
-width:280px;
-background:#181818;
-padding:20px;
-border-radius:10px;
-}
+    audio::-webkit-media-controls-panel {
+      background: #f1f1f1;
+      border-radius: 0;
+    }
 
-.sidebar h2{
-margin-bottom:15px;
-}
+    .sidebar {
+      width: auto;
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      position: relative;
+    }
 
-.sidebar input{
-width:100%;
-padding:10px;
-margin-bottom:10px;
-border:none;
-border-radius:6px;
-}
+    .admin-corner-btn {
+      background: #ffb443;
+      border: 4px solid #000;
+      box-shadow: 6px 6px 0 #000;
+      padding: 16px 28px;
+      font-size: 1.6rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 0.1s linear;
+      color: #000;
+      width: 100%;
+      text-align: center;
+      letter-spacing: -0.5px;
+      position: sticky;
+      top: 24px;
+    }
 
-.sidebar button{
-width:100%;
-padding:10px;
-background:#1db954;
-border:none;
-color:white;
-border-radius:6px;
-cursor:pointer;
-}
+    .admin-corner-btn:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 10px 10px 0 #000;
+      background: #f9d342;
+    }
 
-.sidebar button:hover{
-background:#1ed760;
-}
+    .hidden {
+      display: none !important;
+    }
 
-.hidden{
-display:none;
-}
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
 
-</style>
+    .modal-card {
+      background: #ebebeb;
+      border: 6px solid #000;
+      box-shadow: 16px 16px 0 #000;
+      width: 400px;
+      max-width: 90%;
+      padding: 30px 28px;
+      position: relative;
+    }
+
+    .modal-card h2, .modal-card h3 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-top: 0;
+      margin-bottom: 25px;
+      border-left: 12px solid #000;
+      padding-left: 16px;
+      background: #fff;
+      line-height: 1.2;
+    }
+
+    .modal-card input {
+      width: 100%;
+      padding: 16px 18px;
+      border: 4px solid #000;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 22px;
+      background: #fff;
+      box-shadow: 4px 4px 0 #000;
+      transition: 0.1s;
+    }
+
+    .modal-card input:focus {
+      outline: none;
+      background: #c9f9c9;
+      transform: translate(2px,2px);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .modal-card button {
+      background: #000;
+      border: 4px solid #000;
+      color: white;
+      padding: 16px 22px;
+      font-size: 1.6rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 6px 6px 0 #5e5e5e;
+      transition: 0.1s;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .modal-card button:hover {
+      background: #2e2e2e;
+      transform: translate(-3px, -3px);
+      box-shadow: 10px 10px 0 #3d3d3d;
+    }
+
+    .modal-close {
+      background: #ff5e5e !important;
+      color: #000 !important;
+      border: 4px solid #000 !important;
+      box-shadow: 6px 6px 0 #980000 !important;
+    }
+
+    .modal-close:hover {
+      background: #ff7676 !important;
+    }
+
+    .upload-btn {
+      background: #1db954;
+      color: #000;
+      box-shadow: 6px 6px 0 #0b5e2b;
+    }
+
+    .upload-btn:hover {
+      background: #2ed76e;
+    }
+
+    .logout-btn {
+      background: #ff8a5c;
+      color: #000;
+      border: 4px solid #000;
+      margin-top: 8px;
+    }
+
+    .note-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 15px;
+      border: 3px solid #000;
+      padding: 8px;
+      background: #fff;
+      text-align: center;
+    }
+
+    #loginPanel, #adminPanel {
+      display: none;
+    }
+
+    @media (max-width: 700px) {
+      body { flex-direction: column; }
+      .admin-corner-btn { position: static; }
+    }
+  </style>
 </head>
-
 <body>
 
 <div class="main">
-
-<h1>🎵 Web Musik</h1>
-
-<input id="search" placeholder="Cari lagu...">
-
-<div id="playlist"></div>
-
+  <h1>🎵 WEB MUSIK</h1>
+  <input id="search" placeholder="cari lagu... ketik bebas">
+  <div id="playlist"></div>
 </div>
 
 <div class="sidebar">
-
-<h2>Admin</h2>
-
-<div id="loginPanel">
-
-<input id="user" placeholder="username">
-<input id="pass" type="password" placeholder="password">
-
-<button onclick="login()">Login</button>
-
+  <div id="cornerBtnContainer">
+    <button class="admin-corner-btn" id="mainActionBtn">🔐 LOGIN ADMIN</button>
+  </div>
 </div>
 
-<div id="adminPanel" class="hidden">
-
-<h3>Upload Lagu</h3>
-
-<input id="title" placeholder="judul lagu">
-<input id="url" placeholder="url mp3">
-
-<button onclick="uploadSong()">Upload</button>
-
+<!-- MODAL -->
+<div id="modalOverlay" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div id="modalContent"></div>
+    <button class="modal-close" id="closeModalBtn">TUTUP</button>
+  </div>
 </div>
 
-</div>
+<script type="module">
+  // === STATE MANAGEMENT ===
+  let isAdminLoggedIn = false;
+  
+  // Cek localStorage
+  if (localStorage.getItem("admin") === "true") {
+    isAdminLoggedIn = true;
+  }
 
+  // DOM elements
+  const mainActionBtn = document.getElementById('mainActionBtn');
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalContent = document.getElementById('modalContent');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+
+  // Helper functions
+  function openModal(htmlContent) {
+    modalContent.innerHTML = htmlContent;
+    modalOverlay.classList.remove('hidden');
+  }
+
+  function closeModal() {
+    modalOverlay.classList.add('hidden');
+  }
+
+  function updateCornerButton() {
+    if (isAdminLoggedIn) {
+      mainActionBtn.innerHTML = '📤 UPLOAD MUSIK';
+    } else {
+      mainActionBtn.innerHTML = '🔐 LOGIN ADMIN';
+    }
+  }
+
+  // Logout function (bisa dipanggil dari mana saja)
+  window.logoutAdmin = function() {
+    localStorage.removeItem("admin");
+    isAdminLoggedIn = false;
+    updateCornerButton();
+    closeModal();
+  };
+
+  // === MAIN BUTTON CLICK HANDLER ===
+  mainActionBtn.addEventListener('click', () => {
+    if (isAdminLoggedIn) {
+      // MODAL UPLOAD
+      openModal(`
+        <h3>⬆️ UPLOAD LAGU</h3>
+        <input id="modalTitle" placeholder="judul lagu" autocomplete="off">
+        <input id="modalUrl" placeholder="url mp3 (https://...)">
+        <button class="upload-btn" id="modalUploadBtn">UPLOAD KE FIREBASE</button>
+        <button class="logout-btn" id="modalLogoutBtn">🚪 LOGOUT</button>
+      `);
+      
+      setTimeout(() => {
+        // Upload button
+        const uploadBtn = document.getElementById('modalUploadBtn');
+        if (uploadBtn) {
+          uploadBtn.addEventListener('click', () => {
+            const title = document.getElementById('modalTitle')?.value.trim();
+            const url = document.getElementById('modalUrl')?.value.trim();
+            
+            if (!title || !url) {
+              alert('Judul dan URL harus diisi!');
+              return;
+            }
+            
+            // Panggil fungsi upload dari app.js
+            if (typeof window.uploadSong === 'function') {
+              window.uploadSong(title, url);
+              closeModal();
+            } else {
+              alert('Fungsi upload belum tersedia. Pastikan app.js sudah dimuat.');
+            }
+          });
+        }
+        
+        // Logout button
+        const logoutBtn = document.getElementById('modalLogoutBtn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', window.logoutAdmin);
+        }
+      }, 50);
+      
+    } else {
+      // MODAL LOGIN - HTML cuma UI, logic ada di app.js
+      openModal(`
+        <h2>🔑 LOGIN ADMIN</h2>
+        <input id="modalUser" placeholder="username" autocomplete="off">
+        <input id="modalPass" type="password" placeholder="password">
+        <button id="modalLoginBtn">MASUK</button>
+        <div class="note-text">kredensial: admin / musik</div>
+      `);
+      
+      setTimeout(() => {
+        const loginBtn = document.getElementById('modalLoginBtn');
+        if (loginBtn) {
+          loginBtn.addEventListener('click', () => {
+            const user = document.getElementById('modalUser')?.value;
+            const pass = document.getElementById('modalPass')?.value;
+            
+            // DELEGASI KE app.js - HTML TIDAK TAHU KREDENSIAL
+            if (typeof window.loginAdmin === 'function') {
+              window.loginAdmin(user, pass);
+            } else {
+              alert('Fungsi login belum tersedia. Pastikan app.js sudah dimuat.');
+            }
+          });
+        }
+      }, 50);
+    }
+  });
+
+  // Close modal
+  closeModalBtn.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  // Initial UI update
+  updateCornerButton();
+
+  // Search functionality (tetap di HTML karena murni UI)
+  const searchInput = document.getElementById('search');
+  searchInput.addEventListener('input', function() {
+    const keyword = this.value.toLowerCase();
+    const songs = document.querySelectorAll('.song');
+    songs.forEach(song => {
+      const title = song.querySelector('p')?.innerText.toLowerCase() || '';
+      song.style.display = title.includes(keyword) ? 'block' : 'none';
+    });
+  });
+
+  // Ekspose fungsi untuk dipanggil app.js
+  window.updateAdminUI = function(loginStatus) {
+    isAdminLoggedIn = loginStatus;
+    updateCornerButton();
+  };
+</script>
+
+<!-- app.js: logic login & firebase -->
 <script type="module" src="/app.js"></script>
-
 </body>
 </html>
