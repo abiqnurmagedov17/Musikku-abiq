@@ -8,8 +8,8 @@ const firebaseConfig = {
  projectId: "musik-web-app"
 };
 
-const ADMIN_USER = "admin";
-const ADMIN_PASS = "password";
+const ADMIN_USER = "abiq";
+const ADMIN_PASS = "abiq123";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
